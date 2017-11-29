@@ -42,7 +42,7 @@ function Player () {
     this.shootChunk = undefined;
     this.shootRocketChunk = undefined;
     this.shootShotgunChunk = undefined;
-    
+
     this.mesh = undefined;
     this.chunk = undefined;
     this.currentModel = MODEL_STAND;
@@ -83,7 +83,7 @@ function Player () {
             this.run1Chunk,
             this.run2Chunk,
             this.run1RocketChunk,
-            this.run2RocketChunk, 
+            this.run2RocketChunk,
             this.run1ShotgunChunk,
             this.run2ShotgunChunk,
             this.jumpChunk,
@@ -91,14 +91,14 @@ function Player () {
             this.jumpShotgunChunk,
             this.standChunk,
             this.standRocketChunk,
-            this.standShotgunChunk, 
+            this.standShotgunChunk,
             this.fallChunk,
             this.fallRocketChunk,
             this.fallShotgunChunk,
             this.shootChunk,
             this.shootRocketChunk,
             this.shootShotgunChunk
-        ]; 
+        ];
         for(var i = 0; i < chunks.length; i++) {
             var mesh = chunks[i].mesh;
             mesh.position.set(0,0,0);
@@ -111,7 +111,7 @@ function Player () {
 
         this.cameraObj = new THREE.Object3D();
         this.cameraObj.add(game.camera);
-        
+
         this.attachedCamera = true;
         game.camera.position.set(0, 400, 0);
         game.camera.lookAt(this.cameraObj);
@@ -141,7 +141,7 @@ function Player () {
             rot = new THREE.Vector3(0,0,0);
         }
 
-        switch(model) { 
+        switch(model) {
             case MODEL_JUMP:
                 switch(this.weapon) {
                 case WEAPON_SHOTGUN:
@@ -257,7 +257,7 @@ function Player () {
 //	    $(document).keydown(this.KeyDown.bind(this));
     };
 
-    
+
     Player.prototype.RemoveBindings = function() {
         $(document).unbind('mouseup');
 	    $(document).unbind('mousemove');
@@ -265,7 +265,7 @@ function Player () {
     };
 
     Player.prototype.OnMouseMove = function(jevent) {
-        var event = jevent.originalEvent; 
+        var event = jevent.originalEvent;
         var movementX = event.movementX || event.mozMovementX  ||0;
         var movementZ = event.movementZ || event.mozMovementZ  || 0;
         var x = movementX*0.001;
@@ -317,15 +317,15 @@ function Player () {
 
         var pos = new THREE.Vector3(3,2,5);
         var gpos = pos.applyMatrix4(this.mesh.matrix);
-                                                          
+
         if(block != undefined) {
             block.Create(gpos.x,
                          gpos.y,
                          gpos.z,
-                         0, // R 
+                         0, // R
                          66, // G
                          0, // B
-                         5, // force 
+                         5, // force
                          4, // life,
                          PHYS_GRENADE,
                          1000, // bounces
@@ -379,10 +379,10 @@ function Player () {
                 block2.Create(gpos1.x+(2-lfsr.rand()*4),
                              gpos1.y+(2-lfsr.rand()*4),
                              gpos1.z+(2-lfsr.rand()*4),
-                             0, // R 
+                             0, // R
                              0, // G
                              0, // B
-                             20, // force 
+                             20, // force
                              0.5, // life,
                              PHYS_SHOT,
                              1 // bounces
@@ -394,10 +394,10 @@ function Player () {
                 block.Create(gpos2.x+(2-lfsr.rand()*4),
                              gpos2.y+(2-lfsr.rand()*4),
                              gpos2.z+(2-lfsr.rand()*4),
-                             0, // R 
+                             0, // R
                              0, // G
                              0, // B
-                             20, // force 
+                             20, // force
                              0.5, // life,
                              PHYS_SHOT,
                              1 // bounces
@@ -412,7 +412,7 @@ function Player () {
 
         var pos = new THREE.Vector3(3,2,5);
         var gpos = pos.applyMatrix4(this.mesh.matrix);
-                                                          
+
         if(block != undefined) {
             for(var i = 0; i < 20; i++) {
                 var smoke = game.phys.Get();
@@ -432,10 +432,10 @@ function Player () {
             block.Create(gpos.x,
                          gpos.y,
                          gpos.z,
-                         0xff, // R 
+                         0xff, // R
                          0x8c, // G
                          0, // B
-                         20, // force 
+                         20, // force
                          1, // life,
                          PHYS_MISSILE,
                          1 // bounces
@@ -476,7 +476,7 @@ function Player () {
 
             // Keep head down
             if(type == MOVE_UP) {
-                yi+=2; 
+                yi+=2;
             }
 
             if(game.world.IsWithinWorld(xi,yi,zi)) {
@@ -515,7 +515,7 @@ function Player () {
 
         if(this.keyboard.pressed("W") && this.canWalkForward) {
             this.mesh.translateZ( this.moveDistance );
-            
+
             if(!this.CanMove(MOVE_FORWARD)) {
                 this.mesh.translateZ(-this.moveDistance);
             }
@@ -663,6 +663,9 @@ function Player () {
         var y = Math.round(this.mesh.position.y-7);
         var z = Math.round(this.mesh.position.z+6+2);
 
+        var socket = io();
+        socket.emit('message', { x: x, y: y, z: z });
+
         for(var x1 = x; x1 < x+4; x1++) {
             for(var z1 = z; z1 < z+4; z1++) {
                 if(game.world.IsWithinWorld(x1,y,z1)) {
@@ -729,9 +732,9 @@ function Player () {
                 r = bl.color[0];
                 g = bl.color[1];
                 b = bl.color[2];
-                block.Create(vector.x, 
-                             vector.y, 
-                             vector.z, 
+                block.Create(vector.x,
+                             vector.y,
+                             vector.z,
                              r,
                              g,
                              b,
